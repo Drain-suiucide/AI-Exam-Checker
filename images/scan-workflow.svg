@@ -1,0 +1,56 @@
+<svg width="960" height="520" viewBox="0 0 960 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="cardbg" x1="0" y1="0" x2="960" y2="520" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F8FAFC"/>
+      <stop offset="1" stop-color="#EEF4FF"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="960" height="520" rx="32" fill="url(#cardbg)"/>
+
+  <g>
+    <rect x="52" y="160" width="220" height="190" rx="24" fill="#FFFFFF" stroke="#E2E8F0"/>
+    <rect x="82" y="196" width="160" height="12" rx="6" fill="#D1D5DB"/>
+    <rect x="82" y="220" width="118" height="12" rx="6" fill="#E5E7EB"/>
+    <rect x="82" y="256" width="160" height="68" rx="16" fill="#F3F4F6"/>
+    <path d="M125 312L145 332L174 293" stroke="#1D4ED8" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="82" y="344" width="94" height="28" rx="14" fill="#DBEAFE"/>
+  </g>
+
+  <g>
+    <rect x="340" y="120" width="280" height="250" rx="24" fill="#FFFFFF" stroke="#E2E8F0"/>
+    <rect x="374" y="152" width="200" height="14" rx="7" fill="#E2E8F0"/>
+    <rect x="374" y="184" width="180" height="88" rx="18" fill="#EFF6FF"/>
+    <path d="M412 226L448 262L493 210" stroke="#2563EB" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="374" y="294" width="144" height="12" rx="6" fill="#E5E7EB"/>
+    <rect x="374" y="318" width="116" height="12" rx="6" fill="#E5E7EB"/>
+    <rect x="440" y="292" width="90" height="18" rx="9" fill="#DBEAFE"/>
+  </g>
+
+  <g>
+    <rect x="700" y="150" width="206" height="200" rx="28" fill="#FFFFFF" stroke="#E2E8F0"/>
+    <rect x="732" y="184" width="86" height="12" rx="6" fill="#D1D5DB"/>
+    <rect x="732" y="214" width="132" height="12" rx="6" fill="#E5E7EB"/>
+    <rect x="732" y="250" width="140" height="56" rx="18" fill="#D1FAE5"/>
+    <path d="M760 277L780 298L819 260" stroke="#10B981" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="732" y="318" width="118" height="12" rx="6" fill="#E5E7EB"/>
+  </g>
+
+  <g>
+    <path d="M272 260H340" stroke="#93C5FD" stroke-width="10" stroke-linecap="round"/>
+    <path d="M620 260H700" stroke="#93C5FD" stroke-width="10" stroke-linecap="round"/>
+    <circle cx="272" cy="260" r="8" fill="#1D4ED8"/>
+    <circle cx="620" cy="260" r="8" fill="#1D4ED8"/>
+  </g>
+
+  <g>
+    <rect x="284" y="64" width="162" height="30" rx="15" fill="#DBEAFE"/>
+    <text x="365" y="84" text-anchor="middle" fill="#1E3A8A" font-family="Arial, sans-serif" font-size="14" font-weight="700">Upload</text>
+
+    <rect x="614" y="64" width="162" height="30" rx="15" fill="#DBEAFE"/>
+    <text x="695" y="84" text-anchor="middle" fill="#1E3A8A" font-family="Arial, sans-serif" font-size="14" font-weight="700">Result</text>
+
+    <rect x="448" y="404" width="160" height="30" rx="15" fill="#DCFCE7"/>
+    <text x="528" y="424" text-anchor="middle" fill="#166534" font-family="Arial, sans-serif" font-size="14" font-weight="700">OCR &amp; Review</text>
+  </g>
+</svg>
