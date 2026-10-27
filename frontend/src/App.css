@@ -1,0 +1,175 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--text-body-m);
+  line-height: var(--lh-body-m);
+  color: var(--color-neutral-900);
+  background-color: var(--color-surface-soft);
+}
+
+.container {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--space-3);
+}
+
+/* --- Header --- */
+.header {
+  background-color: var(--color-surface-white);
+  border-bottom: 1px solid var(--color-neutral-200);
+}
+
+.header-inner {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: var(--space-2) var(--space-3);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--color-neutral-900);
+}
+
+.brand-mark {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  background-color: var(--color-primary);
+}
+
+.header-nav {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.header-nav a {
+  color: var(--color-neutral-700);
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: var(--radius-control);
+}
+
+.header-nav a:hover {
+  color: var(--color-primary-dark);
+  background-color: var(--color-neutral-100);
+}
+
+.header-nav a:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+/* --- Hero --- */
+.hero {
+  padding: var(--space-6) 0 var(--space-5);
+  max-width: 640px;
+}
+
+.badge {
+  display: inline-block;
+  margin: 0 0 var(--space-2);
+  padding: 4px 12px;
+  border-radius: var(--radius-control);
+  background-color: var(--color-neutral-100);
+  color: var(--color-neutral-700);
+  font-size: var(--text-label);
+  line-height: var(--lh-label);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.hero-title {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-h1);
+  line-height: var(--lh-h1);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.hero-text {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-body-l);
+  line-height: var(--lh-body-l);
+  color: var(--color-neutral-700);
+}
+
+.hero-note {
+  margin: 0;
+  font-size: var(--text-small);
+  line-height: var(--lh-small);
+  color: var(--color-neutral-500);
+}
+
+/* --- Cards --- */
+.card {
+  background-color: var(--color-surface-white);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-1);
+  padding: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.card-title {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-h3);
+  line-height: var(--lh-h3);
+  font-weight: 600;
+}
+
+.card-text {
+  margin: 0 0 var(--space-2);
+  color: var(--color-neutral-700);
+}
+
+.card-text:last-child {
+  margin-bottom: 0;
+}
+
+/* --- Status badges --- */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: var(--radius-control);
+  font-size: var(--text-small);
+  line-height: var(--lh-small);
+  font-weight: 500;
+}
+
+.status-badge::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: currentColor;
+}
+
+.status-badge-ok {
+  color: var(--color-accent);
+  background-color: rgba(16, 185, 129, 0.12);
+}
+
+.status-badge-loading {
+  color: var(--color-warning);
+  background-color: rgba(245, 158, 11, 0.12);
+}
+
+.status-badge-error {
+  color: var(--color-error);
+  background-color: rgba(220, 38, 38, 0.12);
+}

@@ -1,0 +1,66 @@
+# Docker Compose для локального запуска каркаса AI Exam Checker (T-005).
+# ВАЖНО: рабочим объявляется только после фактического запуска и проверки /health.
+# Все значения ниже — локальные демонстрационные; никаких реальных секретов здесь нет.
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-exam_checker}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-exam_checker_local}
+      POSTGRES_DB: ${POSTGRES_DB:-exam_checker}
+    # Порт наружу не публикуется: backend ходит к db по внутренней сети compose.
+    # При необходимости проверить БД с хоста: docker compose exec db psql -U exam_checker
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-exam_checker} -d ${POSTGRES_DB:-exam_checker}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  backend:
+    build:
+      context: ./backend
+      args:
+        BUILD_TAG: local
+    environment:
+      ENVIRONMENT: development
+      DEBUG: "false"
+      APP_HOST: 0.0.0.0
+      APP_PORT: "8000"
+      # PostgreSQL подключён на этапе каркаса схемой данных; миграции — T-006.
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-exam_checker}:${POSTGRES_PASSWORD:-exam_checker_local}@db:5432/${POSTGRES_DB:-exam_checker}
+      DEMO_MODE: "true"
+      OCR_ENGINE: mock
+      LLM_PROVIDER: mock
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  web:
+    build:
+      context: ./frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://localhost/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  pgdata:
+
