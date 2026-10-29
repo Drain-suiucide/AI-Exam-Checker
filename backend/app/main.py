@@ -1,4 +1,4 @@
-﻿"""Точка входа backend AI Exam Checker.
+"""Точка входа backend AI Exam Checker.
 
 Каркас T-005: только GET /health, конфигурация и единый формат ошибок.
 Полноценная проверка ответов (OCR, оценка, экспертная проверка) — T-006+.
@@ -12,7 +12,8 @@ from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
-from app.routes import health
+from app.exceptions import BASE_EXCEPTIONS
+from app.routes import configurations, health
 
 logger = logging.getLogger("ai-exam-checker")
 
@@ -55,20 +56,32 @@ def create_app() -> FastAPI:
         redoc_url="/redoc" if settings.ENVIRONMENT != "production" else None,
         openapi_url="/openapi.json" if settings.ENVIRONMENT != "production" else None,
     )
+    for exception_type, handler in BASE_EXCEPTIONS.items():
+        app.add_exception_handler(exception_type, handler)
 
-    app.add_middleware(CORSMiddleware, allow_origins=[], allow_credentials=True,
-                       allow_methods=["*"], allow_headers=["*"])
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=[],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
     app.middleware("http")(request_id_middleware)
 
     if settings.cors_origins:
         # Внешние origin разрешаются только явной настройкой CORS_ORIGINS.
         app.user_middleware.clear()
-        app.add_middleware(CORSMiddleware, allow_origins=settings.cors_origins,
-                           allow_credentials=True, allow_methods=["*"],
-                           allow_headers=["*"])
+        app.add_middleware(
+            CORSMiddleware,
+            allow_origins=settings.cors_origins,
+            allow_credentials=True,
+            allow_methods=["*"],
+            allow_headers=["*"],
+        )
         app.middleware("http")(request_id_middleware)
 
     app.include_router(health.router, prefix=settings.API_V1_PREFIX)
+    app.include_router(configurations.router, prefix=settings.API_V1_PREFIX)
 
     # Docker HEALTHCHECK и платформенные пробы используют короткий путь.
     app.add_api_route("/health", _liveness, methods=["GET"], include_in_schema=False)

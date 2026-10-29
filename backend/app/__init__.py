@@ -1,3 +1,3 @@
-# Minimal skeleton — AI Exam Checker backend.
-# No full answer-checking implementation; only health + configuration scaffolding.
+"""AI Exam Checker backend package."""
+
 __version__ = "0.1.0"

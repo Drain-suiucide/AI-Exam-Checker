@@ -1,4 +1,4 @@
-﻿"""Конфигурация приложения из переменных окружения (pydantic-settings).
+"""Конфигурация приложения из переменных окружения (pydantic-settings).
 
 Все значения читаются из окружения или `.env`; секретов в коде нет.
 Обязательных секретов на этапе каркаса нет: DATABASE_URL не нужен для /health.
@@ -30,6 +30,7 @@ class Settings(BaseSettings):
     APP_PORT: int = 8000
     API_V1_PREFIX: str = "/api/v1"
     CORS_ORIGINS: str = ""
+    ALLOW_UNAPPROVED_CONFIG: bool = False
 
     # --- база данных ---
     # На этапе каркаса необязательна: /health не зависит от PostgreSQL (T-005).

@@ -1,5 +1,7 @@
 """Общие зависимости FastAPI."""
+
 from fastapi import Request
+
 from app.config import settings
 
 
