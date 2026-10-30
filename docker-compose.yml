@@ -34,8 +34,11 @@ services:
       DEMO_MODE: "true"
       OCR_ENGINE: mock
       LLM_PROVIDER: mock
+    # В production backend не должен публиковать порт наружу напрямую:
+    # весь трафик должен идти через reverse-proxy (web / nginx).
+    # Для локальной разработки порт оставлен.
     ports:
-      - "8000:8000"
+      - "127.0.0.1:8000:8000"
     depends_on:
       db:
         condition: service_healthy
