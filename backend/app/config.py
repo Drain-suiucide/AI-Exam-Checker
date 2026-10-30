@@ -43,6 +43,16 @@ class Settings(BaseSettings):
     OCR_ENGINE: Literal["mock", "tesseract", "easyocr"] = "mock"
     LLM_PROVIDER: Literal["mock", "openai", "anthropic"] = "mock"
 
+    # --- OCR ---
+    #: Язык распознавания (модели Tesseract через «+», например `rus+eng`; `eng` нужен для римских цифр).
+    OCR_LANGUAGE: str = "rus+eng"
+    #: Каталог с `*.traineddata`; пусто — системный каталог Tesseract.
+    OCR_TESSDATA_PREFIX: str | None = None
+    #: Путь к бинарнику `tesseract`, если его нет в PATH.
+    OCR_TESSERACT_CMD: str | None = None
+    #: Попыток на страницу при временной ошибке движка.
+    OCR_MAX_ATTEMPTS: int = 2
+
     @property
     def cors_origins(self) -> list[str]:
         """CORS_ORIGINS хранится строкой через запятую, как в .env."""
