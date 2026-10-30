@@ -32,3 +32,6 @@ uploads/
 Thumbs.db
 .idea/
 .vscode/
+
+# Локальные модели OCR (скачиваются отдельно, см. docs/research/ocr_comparison.md)
+backend/.ocr-models/
