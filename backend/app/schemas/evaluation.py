@@ -6,9 +6,11 @@ from pydantic import BaseModel, Field, HttpUrl
 
 # --- Существующие схемы ---
 
+
 class ScoreVariant(BaseModel):
     score: int
     condition: str
+
 
 class CriterionDetails(BaseModel):
     criterion_id: str
@@ -19,6 +21,7 @@ class CriterionDetails(BaseModel):
     score_variants: list[ScoreVariant]
     required_evidence: str
     ambiguity_rules: str
+
 
 class CriteriaVersion(BaseModel):
     exam: str
@@ -31,6 +34,7 @@ class CriteriaVersion(BaseModel):
     criteria: list[CriterionDetails]
     manual_review_triggers: list[str] = Field(default_factory=list)
 
+
 class CriterionScoreResult(BaseModel):
     criterion_id: str
     score: int
@@ -39,12 +43,14 @@ class CriterionScoreResult(BaseModel):
     status: Literal["pre_confirmed", "ambiguous", "needs_review"]
     used_version_link: str
 
+
 class EvaluationResult(BaseModel):
     total_score: int
     criterion_scores: list[CriterionScoreResult]
     overall_status: Literal["success", "needs_manual_review", "rejected"]
     version_id: str
     review_reason: str | None = None
+
 
 # --- Новые схемы для Expert Review Workflow ---
 
@@ -60,6 +66,7 @@ WorkflowStatus = Literal[
     "FAILED",
 ]
 
+
 class AuditLogEntry(BaseModel):
     log_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     timestamp: datetime = Field(default_factory=lambda: datetime.now(UTC).replace(tzinfo=None))
@@ -69,10 +76,12 @@ class AuditLogEntry(BaseModel):
     new_state: dict[str, Any] | None = None
     reasoning: str | None = Field(None, description="Обоснование эксперта")
 
+
 class ExpertEvaluationUpdate(BaseModel):
     criterion_scores: list[CriterionScoreResult]
     total_score: int
     reasoning: str = Field(..., description="Обязательное обоснование изменения оценок")
+
 
 class WorkflowState(BaseModel):
     submission_id: str
@@ -84,8 +93,12 @@ class WorkflowState(BaseModel):
     transcription: str | None = None
 
     # Оценки
-    ai_evaluation: EvaluationResult | None = Field(None, description="Оригинальный результат модели (immutable)")
-    expert_evaluation: EvaluationResult | None = Field(None, description="Результат проверки экспертом")
+    ai_evaluation: EvaluationResult | None = Field(
+        None, description="Оригинальный результат модели (immutable)"
+    )
+    expert_evaluation: EvaluationResult | None = Field(
+        None, description="Результат проверки экспертом"
+    )
     final_evaluation: EvaluationResult | None = Field(None, description="Итоговый результат")
 
     # Блокировка

@@ -150,8 +150,7 @@ SAMPLES: tuple[SampleText, ...] = (
         sample_id="printed-05",
         category="printed",
         reference=(
-            "Куликовская битва состоялась в 1380 году. "
-            "Дмитрий Донской возглавил русское войско."
+            "Куликовская битва состоялась в 1380 году. Дмитрий Донской возглавил русское войско."
         ),
         critical_entities=(
             ("1380", "date"),
@@ -162,8 +161,7 @@ SAMPLES: tuple[SampleText, ...] = (
         sample_id="low-light-01",
         category="low_light",
         reference=(
-            "Отмена крепостного права в 1861 году стала поворотным "
-            "событием в истории России."
+            "Отмена крепостного права в 1861 году стала поворотным событием в истории России."
         ),
         critical_entities=(("1861", "date"), ("крепостного права", "term")),
     ),
@@ -171,8 +169,7 @@ SAMPLES: tuple[SampleText, ...] = (
         sample_id="low-light-02",
         category="low_light",
         reference=(
-            "Новгородская республика существовала до 1478 года, "
-            "когда её присоединил Иван III."
+            "Новгородская республика существовала до 1478 года, когда её присоединил Иван III."
         ),
         critical_entities=(
             ("1478", "date"),
@@ -195,8 +192,7 @@ SAMPLES: tuple[SampleText, ...] = (
         sample_id="rotated-01",
         category="rotated",
         reference=(
-            "Бородинское сражение произошло в 1812 году. "
-            "Русской армией командовал Михаил Кутузов."
+            "Бородинское сражение произошло в 1812 году. Русской армией командовал Михаил Кутузов."
         ),
         critical_entities=(
             ("1812", "date"),
@@ -207,8 +203,7 @@ SAMPLES: tuple[SampleText, ...] = (
         sample_id="rotated-02",
         category="rotated",
         reference=(
-            "Первый съезд РСДРП состоялся в 1898 году в Минске. "
-            "Партия не имела единой программы."
+            "Первый съезд РСДРП состоялся в 1898 году в Минске. Партия не имела единой программы."
         ),
         critical_entities=(
             ("1898", "date"),
@@ -240,8 +235,7 @@ SAMPLES: tuple[SampleText, ...] = (
         sample_id="low-res-02",
         category="low_res",
         reference=(
-            "Невская битва произошла в 1240 году. "
-            "Александр Невский возглавил новгородское войско."
+            "Невская битва произошла в 1240 году. Александр Невский возглавил новгородское войско."
         ),
         critical_entities=(
             ("1240", "date"),
@@ -274,18 +268,14 @@ SAMPLES: tuple[SampleText, ...] = (
         sample_id="smudges-02",
         category="smudges",
         reference=(
-            "Ленд-лиз был важным источником поставок для СССР "
-            "в годы Великой Отечественной войны."
+            "Ленд-лиз был важным источником поставок для СССР в годы Великой Отечественной войны."
         ),
         critical_entities=(("Ленд-лиз", "term"), ("Великой Отечественной", "term")),
     ),
     SampleText(
         sample_id="smudges-03",
         category="smudges",
-        reference=(
-            "Соборное уложение 1649 года окончательно закрепило "
-            "крепостное право в России."
-        ),
+        reference=("Соборное уложение 1649 года окончательно закрепило крепостное право в России."),
         critical_entities=(("1649", "date"), ("крепостное право", "term")),
     ),
     SampleText(
@@ -344,9 +334,7 @@ SAMPLES: tuple[SampleText, ...] = (
     SampleText(
         sample_id="handwriting-font-01",
         category="handwriting_font",
-        reference=(
-            "Пётр I провёл реформу армии. Рекрутские наборы начались в 1705 году."
-        ),
+        reference=("Пётр I провёл реформу армии. Рекрутские наборы начались в 1705 году."),
         critical_entities=(("Пётр I", "name"), ("1705", "date")),
     ),
     SampleText(
@@ -365,9 +353,7 @@ SAMPLES: tuple[SampleText, ...] = (
     SampleText(
         sample_id="handwriting-font-03",
         category="handwriting_font",
-        reference=(
-            "Смута закончилась избранием Михаила Романова в 1613 году."
-        ),
+        reference=("Смута закончилась избранием Михаила Романова в 1613 году."),
         critical_entities=(("Михаила Романова", "name"), ("1613", "date")),
     ),
     # --- Отложенная выборка (test): по ней параметры не настраивались ---
@@ -414,8 +400,7 @@ SAMPLES: tuple[SampleText, ...] = (
         category="rotated",
         split="test",
         reference=(
-            "Пётр III правил недолго и был свергнут в 1762 году. "
-            "К власти пришла Екатерина II."
+            "Пётр III правил недолго и был свергнут в 1762 году. К власти пришла Екатерина II."
         ),
         critical_entities=(
             ("Пётр III", "name"),
@@ -500,8 +485,7 @@ SAMPLES: tuple[SampleText, ...] = (
         category="handwriting_font",
         split="test",
         reference=(
-            "Пётр I не поддержал заговор царевны Софьи. "
-            "Стрелецкий бунт был подавлен в 1698 году."
+            "Пётр I не поддержал заговор царевны Софьи. Стрелецкий бунт был подавлен в 1698 году."
         ),
         critical_entities=(
             ("Пётр I", "name"),
@@ -700,10 +684,7 @@ def build_sample(spec: SampleText, *, seed: int) -> Sample:
 
 def build_dataset(seed: int = 20261029) -> list[Sample]:
     """Собрать полный набор образцов (детерминированно по `seed`)."""
-    return [
-        build_sample(spec, seed=seed + index)
-        for index, spec in enumerate(SAMPLES)
-    ]
+    return [build_sample(spec, seed=seed + index) for index, spec in enumerate(SAMPLES)]
 
 
 def write_dataset(target: Path, *, seed: int = 20261029) -> Path:

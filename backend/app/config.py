@@ -44,7 +44,8 @@ class Settings(BaseSettings):
     LLM_PROVIDER: Literal["mock", "openai", "anthropic"] = "mock"
 
     # --- OCR ---
-    #: Язык распознавания (модели Tesseract через «+», например `rus+eng`; `eng` нужен для римских цифр).
+    #: Язык распознавания (модели Tesseract через «+»,
+    #: например `rus+eng`; `eng` нужен для римских цифр).
     OCR_LANGUAGE: str = "rus+eng"
     #: Каталог с `*.traineddata`; пусто — системный каталог Tesseract.
     OCR_TESSDATA_PREFIX: str | None = None

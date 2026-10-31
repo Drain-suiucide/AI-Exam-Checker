@@ -642,10 +642,7 @@ def _observations(
         )
 
     date_losses = [
-        entity
-        for outcome in outcomes
-        for entity in outcome.lost_entities
-        if entity.kind == "date"
+        entity for outcome in outcomes for entity in outcome.lost_entities if entity.kind == "date"
     ]
     if date_losses:
         examples = ", ".join(
@@ -734,9 +731,7 @@ def sweep_variants() -> list[Variant]:
         variants.append(
             Variant(
                 f"psm {psm}",
-                _tesseract_runner(
-                    config=f"--psm {psm}", deskew=True, tessdata_prefix=base_prefix
-                ),
+                _tesseract_runner(config=f"--psm {psm}", deskew=True, tessdata_prefix=base_prefix),
             )
         )
 
@@ -846,9 +841,7 @@ def main(argv: list[str] | None = None) -> int:
             return 0
 
         runner = make_runner(args.engine)
-        outcomes, engine_info = evaluate(
-            runner, seed=args.seed, limit=args.limit, split="test"
-        )
+        outcomes, engine_info = evaluate(runner, seed=args.seed, limit=args.limit, split="test")
         dev_outcomes, _ = evaluate(runner, seed=args.seed, limit=args.limit, split="dev")
     except OcrError as error:
         print(f"Ошибка распознавания: {error.message}", file=sys.stderr)
@@ -897,9 +890,7 @@ def main(argv: list[str] | None = None) -> int:
                 for outcome in outcomes
             ],
         }
-        args.json.write_text(
-            json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8"
-        )
+        args.json.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
         print(f"JSON записан: {args.json}")
 
     return 0

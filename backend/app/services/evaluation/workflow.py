@@ -14,8 +14,10 @@ from app.schemas.evaluation import (
 class StateTransitionError(Exception):
     pass
 
+
 class ConcurrencyConflictError(Exception):
     pass
+
 
 class UnauthorizedActionError(Exception):
     pass
@@ -28,26 +30,40 @@ class ReviewWorkflowService:
         # В реальном приложении здесь был бы репозиторий для доступа к БД
         pass
 
-    def _add_audit_log(self, state: WorkflowState, user_id: str, action: str,
-                       previous_state: dict[str, Any] | None = None,
-                       new_state: dict[str, Any] | None = None,
-                       reasoning: str | None = None):
+    def _add_audit_log(
+        self,
+        state: WorkflowState,
+        user_id: str,
+        action: str,
+        previous_state: dict[str, Any] | None = None,
+        new_state: dict[str, Any] | None = None,
+        reasoning: str | None = None,
+    ):
         log = AuditLogEntry(
             user_id=user_id,
             action=action,
             previous_state=previous_state,
             new_state=new_state,
-            reasoning=reasoning
+            reasoning=reasoning,
         )
         state.audit_trail.append(log)
 
-    def transition_status(self, state: WorkflowState, current_version: int,
-                          new_status: WorkflowStatus, user_id: str, action_name: str,
-                          required_role: str = "system", reasoning: str | None = None):
+    def transition_status(
+        self,
+        state: WorkflowState,
+        current_version: int,
+        new_status: WorkflowStatus,
+        user_id: str,
+        action_name: str,
+        required_role: str = "system",
+        reasoning: str | None = None,
+    ):
         """Generic state transition logic with concurrency check."""
         # 1. Optimistic Concurrency Control
         if state.version != current_version:
-            raise ConcurrencyConflictError("Document version mismatch. Another user may have updated it.")
+            raise ConcurrencyConflictError(
+                "Document version mismatch. Another user may have updated it."
+            )
 
         # 2. Check roles (simplified logic)
         # В реальной системе здесь будет проверка RBAC
@@ -66,10 +82,12 @@ class ReviewWorkflowService:
             action=action_name,
             previous_state={"status": old_status},
             new_state={"status": new_status},
-            reasoning=reasoning
+            reasoning=reasoning,
         )
 
-    def start_expert_review(self, state: WorkflowState, expert_id: str, current_version: int) -> WorkflowState:
+    def start_expert_review(
+        self, state: WorkflowState, expert_id: str, current_version: int
+    ) -> WorkflowState:
         """Эсперт берет работу на проверку."""
         if state.status != "REVIEW_REQUIRED":
             raise StateTransitionError(f"Cannot start review from status {state.status}")
@@ -83,13 +101,15 @@ class ReviewWorkflowService:
             new_status="REVIEW_IN_PROGRESS",
             user_id=expert_id,
             action_name="EXPERT_REVIEW_STARTED",
-            required_role="expert"
+            required_role="expert",
         )
         state.locked_by_user_id = expert_id
         state.locked_at = datetime.now(UTC).replace(tzinfo=None)
         return state
 
-    def accept_ai_evaluation(self, state: WorkflowState, expert_id: str, current_version: int) -> WorkflowState:
+    def accept_ai_evaluation(
+        self, state: WorkflowState, expert_id: str, current_version: int
+    ) -> WorkflowState:
         """Эксперт принимает оценку AI без изменений."""
         if state.status != "REVIEW_IN_PROGRESS":
             raise StateTransitionError("Review must be in progress to accept.")
@@ -103,7 +123,7 @@ class ReviewWorkflowService:
             new_status="COMPLETED",
             user_id=expert_id,
             action_name="AI_SCORE_ACCEPTED",
-            required_role="expert"
+            required_role="expert",
         )
 
         # Финальный результат равен результату ИИ
@@ -114,8 +134,13 @@ class ReviewWorkflowService:
         state.locked_at = None
         return state
 
-    def modify_evaluation(self, state: WorkflowState, expert_id: str, current_version: int,
-                          update: ExpertEvaluationUpdate) -> WorkflowState:
+    def modify_evaluation(
+        self,
+        state: WorkflowState,
+        expert_id: str,
+        current_version: int,
+        update: ExpertEvaluationUpdate,
+    ) -> WorkflowState:
         """Эксперт изменяет оценку и обосновывает её."""
         if state.status != "REVIEW_IN_PROGRESS":
             raise StateTransitionError("Review must be in progress to modify.")
@@ -135,16 +160,16 @@ class ReviewWorkflowService:
             user_id=expert_id,
             action_name="SCORE_MODIFIED",
             required_role="expert",
-            reasoning=update.reasoning
+            reasoning=update.reasoning,
         )
 
         # Создаем новый EvaluationResult на основе обновления
         new_eval = EvaluationResult(
             total_score=update.total_score,
             criterion_scores=update.criterion_scores,
-            overall_status="success", # После ручной проверки статус успешен
+            overall_status="success",  # После ручной проверки статус успешен
             version_id=state.ai_evaluation.version_id if state.ai_evaluation else "manual",
-            review_reason=update.reasoning
+            review_reason=update.reasoning,
         )
 
         state.expert_evaluation = new_eval

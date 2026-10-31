@@ -37,8 +37,8 @@ def edit_distance(reference: str, hypothesis: str) -> int:
             cost = 0 if ref_char == hyp_char else 1
             current.append(
                 min(
-                    previous[j] + 1,        # удаление
-                    current[j - 1] + 1,     # вставка
+                    previous[j] + 1,  # удаление
+                    current[j - 1] + 1,  # вставка
                     previous[j - 1] + cost,  # замена
                 )
             )
@@ -88,9 +88,7 @@ def _word_edit_distance(reference: list[str], hypothesis: list[str]) -> int:
         current = [i]
         for j, hyp_word in enumerate(hypothesis, start=1):
             cost = 0 if ref_word == hyp_word else 1
-            current.append(
-                min(previous[j] + 1, current[j - 1] + 1, previous[j - 1] + cost)
-            )
+            current.append(min(previous[j] + 1, current[j - 1] + 1, previous[j - 1] + cost))
         previous = current
     return previous[-1]
 
