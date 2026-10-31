@@ -1,7 +1,8 @@
-from pydantic import BaseModel, Field, HttpUrl
-from typing import List, Optional, Literal, Dict, Any
-from datetime import date, datetime, timezone
 import uuid
+from datetime import UTC, date, datetime
+from typing import Any, Literal
+
+from pydantic import BaseModel, Field, HttpUrl
 
 # --- Существующие схемы ---
 
@@ -15,7 +16,7 @@ class CriterionDetails(BaseModel):
     llm_instruction: str = Field(description="Внутренняя инструкция для языковой модели")
     project_rules: str = Field(description="Проектные правила оценивания")
     diagnostic_hints: str = Field(description="Диагностические подсказки для объяснения")
-    score_variants: List[ScoreVariant]
+    score_variants: list[ScoreVariant]
     required_evidence: str
     ambiguity_rules: str
 
@@ -27,23 +28,23 @@ class CriteriaVersion(BaseModel):
     source_url: str
     approval_date: date
     max_score: int
-    criteria: List[CriterionDetails]
-    manual_review_triggers: List[str] = Field(default_factory=list)
+    criteria: list[CriterionDetails]
+    manual_review_triggers: list[str] = Field(default_factory=list)
 
 class CriterionScoreResult(BaseModel):
     criterion_id: str
     score: int
-    evidence_fragment: Optional[str] = Field(None, description="Доказательный фрагмент из ответа")
+    evidence_fragment: str | None = Field(None, description="Доказательный фрагмент из ответа")
     explanation: str
     status: Literal["pre_confirmed", "ambiguous", "needs_review"]
     used_version_link: str
 
 class EvaluationResult(BaseModel):
     total_score: int
-    criterion_scores: List[CriterionScoreResult]
+    criterion_scores: list[CriterionScoreResult]
     overall_status: Literal["success", "needs_manual_review", "rejected"]
     version_id: str
-    review_reason: Optional[str] = None
+    review_reason: str | None = None
 
 # --- Новые схемы для Expert Review Workflow ---
 
@@ -61,15 +62,15 @@ WorkflowStatus = Literal[
 
 class AuditLogEntry(BaseModel):
     log_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc).replace(tzinfo=None))
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(UTC).replace(tzinfo=None))
     user_id: str = Field(description="ID пользователя или 'system'")
     action: str = Field(description="Тип действия (например, SCORE_MODIFIED)")
-    previous_state: Optional[Dict[str, Any]] = None
-    new_state: Optional[Dict[str, Any]] = None
-    reasoning: Optional[str] = Field(None, description="Обоснование эксперта")
+    previous_state: dict[str, Any] | None = None
+    new_state: dict[str, Any] | None = None
+    reasoning: str | None = Field(None, description="Обоснование эксперта")
 
 class ExpertEvaluationUpdate(BaseModel):
-    criterion_scores: List[CriterionScoreResult]
+    criterion_scores: list[CriterionScoreResult]
     total_score: int
     reasoning: str = Field(..., description="Обязательное обоснование изменения оценок")
 
@@ -79,17 +80,17 @@ class WorkflowState(BaseModel):
     version: int = Field(default=1, description="Для оптимистичных блокировок")
 
     # Данные OCR
-    image_url: Optional[HttpUrl] = None
-    transcription: Optional[str] = None
+    image_url: HttpUrl | None = None
+    transcription: str | None = None
 
     # Оценки
-    ai_evaluation: Optional[EvaluationResult] = Field(None, description="Оригинальный результат модели (immutable)")
-    expert_evaluation: Optional[EvaluationResult] = Field(None, description="Результат проверки экспертом")
-    final_evaluation: Optional[EvaluationResult] = Field(None, description="Итоговый результат")
+    ai_evaluation: EvaluationResult | None = Field(None, description="Оригинальный результат модели (immutable)")
+    expert_evaluation: EvaluationResult | None = Field(None, description="Результат проверки экспертом")
+    final_evaluation: EvaluationResult | None = Field(None, description="Итоговый результат")
 
     # Блокировка
-    locked_by_user_id: Optional[str] = None
-    locked_at: Optional[datetime] = None
+    locked_by_user_id: str | None = None
+    locked_at: datetime | None = None
 
     # Аудит
-    audit_trail: List[AuditLogEntry] = Field(default_factory=list)
+    audit_trail: list[AuditLogEntry] = Field(default_factory=list)

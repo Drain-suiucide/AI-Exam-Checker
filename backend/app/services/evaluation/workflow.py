@@ -1,14 +1,15 @@
-from datetime import datetime
-from typing import Optional, Dict, Any
 import copy
+from datetime import UTC, datetime
+from typing import Any
 
 from app.schemas.evaluation import (
+    AuditLogEntry,
+    EvaluationResult,
+    ExpertEvaluationUpdate,
     WorkflowState,
     WorkflowStatus,
-    AuditLogEntry,
-    ExpertEvaluationUpdate,
-    EvaluationResult
 )
+
 
 class StateTransitionError(Exception):
     pass
@@ -28,9 +29,9 @@ class ReviewWorkflowService:
         pass
 
     def _add_audit_log(self, state: WorkflowState, user_id: str, action: str,
-                       previous_state: Optional[Dict[str, Any]] = None,
-                       new_state: Optional[Dict[str, Any]] = None,
-                       reasoning: Optional[str] = None):
+                       previous_state: dict[str, Any] | None = None,
+                       new_state: dict[str, Any] | None = None,
+                       reasoning: str | None = None):
         log = AuditLogEntry(
             user_id=user_id,
             action=action,
@@ -42,7 +43,7 @@ class ReviewWorkflowService:
 
     def transition_status(self, state: WorkflowState, current_version: int,
                           new_status: WorkflowStatus, user_id: str, action_name: str,
-                          required_role: str = "system", reasoning: Optional[str] = None):
+                          required_role: str = "system", reasoning: str | None = None):
         """Generic state transition logic with concurrency check."""
         # 1. Optimistic Concurrency Control
         if state.version != current_version:
@@ -85,8 +86,7 @@ class ReviewWorkflowService:
             required_role="expert"
         )
         state.locked_by_user_id = expert_id
-        from datetime import timezone
-        state.locked_at = datetime.now(timezone.utc).replace(tzinfo=None)
+        state.locked_at = datetime.now(UTC).replace(tzinfo=None)
         return state
 
     def accept_ai_evaluation(self, state: WorkflowState, expert_id: str, current_version: int) -> WorkflowState:
@@ -126,7 +126,7 @@ class ReviewWorkflowService:
         if not update.reasoning:
             raise ValueError("Reasoning is required for modification.")
 
-        old_eval_dict = state.ai_evaluation.model_dump() if state.ai_evaluation else None
+        state.ai_evaluation.model_dump() if state.ai_evaluation else None
 
         self.transition_status(
             state=state,
